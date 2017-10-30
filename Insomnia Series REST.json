@@ -1,0 +1,306 @@
+{
+	"_type": "export",
+	"__export_format": 3,
+	"__export_date": "2017-10-30T21:41:00.220Z",
+	"__export_source": "insomnia.desktop.app:v5.9.6",
+	"resources": [
+		{
+			"_id": "wrk_fbbe5db01e2d4a0eaa874519a7397584",
+			"parentId": null,
+			"modified": 1509269067879,
+			"created": 1509269067879,
+			"name": "Series REST",
+			"description": "",
+			"certificates": [],
+			"_type": "workspace"
+		},
+		{
+			"_id": "env_b969965575c64a50a8fe99ff9f5da687",
+			"parentId": "wrk_fbbe5db01e2d4a0eaa874519a7397584",
+			"modified": 1509274235771,
+			"created": 1509274235771,
+			"name": "Base Environment",
+			"data": {},
+			"color": null,
+			"isPrivate": false,
+			"_type": "environment"
+		},
+		{
+			"_id": "jar_6ed9207675b1404ba41651c88d70da7e",
+			"parentId": "wrk_fbbe5db01e2d4a0eaa874519a7397584",
+			"modified": 1509274787197,
+			"created": 1509274785881,
+			"name": "Default Jar",
+			"cookies": [
+				{
+					"creation": "2017-10-29T10:59:47.197Z",
+					"key": "__cfduid",
+					"value": "d281a29bc4c95fadad13ccec89ca727991509274785",
+					"expires": "2018-10-29T10:59:45.000Z",
+					"path": "/",
+					"domain": "thetvdb.com",
+					"httpOnly": true,
+					"hostOnly": false,
+					"lastAccessed": "2017-10-29T10:59:47.197Z",
+					"id": "8362281546570058"
+				}
+			],
+			"_type": "cookie_jar"
+		},
+		{
+			"_id": "fld_9ed572c2db1f4950a5ffd233655f1b38",
+			"parentId": "wrk_fbbe5db01e2d4a0eaa874519a7397584",
+			"modified": 1509368161916,
+			"created": 1509368161916,
+			"name": "Nice to know",
+			"description": "",
+			"environment": {},
+			"metaSortKey": -1509368161916,
+			"_type": "request_group"
+		},
+		{
+			"_id": "fld_408a617c86bb46b3ae48828cd7f6153e",
+			"parentId": "wrk_fbbe5db01e2d4a0eaa874519a7397584",
+			"modified": 1509368170511,
+			"created": 1509368170511,
+			"name": "Essential",
+			"description": "",
+			"environment": {},
+			"metaSortKey": -1509368170511,
+			"_type": "request_group"
+		},
+		{
+			"_id": "env_e6be0b9e70ed4c90b1f0df3ce70d9b1d",
+			"parentId": "env_b969965575c64a50a8fe99ff9f5da687",
+			"modified": 1509368262913,
+			"created": 1509368218520,
+			"name": "The TV DB",
+			"data": {
+				"token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDk0NTQwMjYsImlkIjoiUHJpdmF0ZSBTZXJpZSBQcm9ncmVzcyIsIm9yaWdfaWF0IjoxNTA5MzY3NjI2fQ.HOG-EIHMv9bWuxMiOOwSKmhdIfmKhDpd62ibBCotPlaWzFaiCujRdJpPPlZcaqw8rGhhq6bbYsk6BvWVNJFvNs-WjAb5BnHNVp0A0KmQHdaxKsBpEhHFvLgbfPIKUb8Lcrsi18YAoPlMVt3jnC8n2UxqFE-WnoaMyDUHt59anxP136PhRKONpw1TL9hdh2A6B6TWR0AnAoS7s8ptGOtl70lvoXqJeXX4df7De2oidRm1W84DmDp7pPlgFOrhpJ_mvwP48be5gAEi3J6lYR4JkMz4GbIWiR-VxHun06MYgvmW2bauJRRTGJulPtnTDnp9-TfYKn2lJ-JU0dHGF7Sklw"
+			},
+			"color": null,
+			"isPrivate": false,
+			"_type": "environment"
+		},
+		{
+			"_id": "req_3997d791c3ae424bbff857714b50ba5c",
+			"parentId": "fld_9ed572c2db1f4950a5ffd233655f1b38",
+			"modified": 1509368346432,
+			"created": 1509276470633,
+			"url": "https://api.thetvdb.com/series/121361/images",
+			"name": "Show Image Count",
+			"description": "",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Accept",
+					"value": "application/json",
+					"id": "pair_fc0962eec5ca4d54b5f7fb6c9792e3fb"
+				},
+				{
+					"name": "Authorization",
+					"value": "Bearer {{ token }}",
+					"id": "pair_b3fd7b47d3ed44a99807834223737279"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1508379876567.4375,
+			"settingStoreCookies": false,
+			"settingSendCookies": false,
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"_type": "request"
+		},
+		{
+			"_id": "req_300ea496137744908dfebd7e3167ad0c",
+			"parentId": "fld_9ed572c2db1f4950a5ffd233655f1b38",
+			"modified": 1509368353338,
+			"created": 1509276640011,
+			"url": "https://api.thetvdb.com/series/121361/images/query?keyType=poster",
+			"name": "Show Image (Query)",
+			"description": "",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Accept",
+					"value": "application/json",
+					"id": "pair_fc0962eec5ca4d54b5f7fb6c9792e3fb"
+				},
+				{
+					"name": "Authorization",
+					"value": "Bearer {{ token }}",
+					"id": "pair_b3fd7b47d3ed44a99807834223737279"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1508379876542.4375,
+			"settingStoreCookies": false,
+			"settingSendCookies": false,
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"_type": "request"
+		},
+		{
+			"_id": "req_01a459399c684e4cb62bdc38fef8a152",
+			"parentId": "fld_9ed572c2db1f4950a5ffd233655f1b38",
+			"modified": 1509368356445,
+			"created": 1509276674370,
+			"url": "https://api.thetvdb.com/series/121361/images/query/params",
+			"name": "Show Image (Query Params)",
+			"description": "",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Accept",
+					"value": "application/json",
+					"id": "pair_fc0962eec5ca4d54b5f7fb6c9792e3fb"
+				},
+				{
+					"name": "Authorization",
+					"value": "Bearer {{ token }}",
+					"id": "pair_b3fd7b47d3ed44a99807834223737279"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1508379876517.4375,
+			"settingStoreCookies": false,
+			"settingSendCookies": false,
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"_type": "request"
+		},
+		{
+			"_id": "req_f0350a7410e14cf1969fe8776dab003c",
+			"parentId": "fld_408a617c86bb46b3ae48828cd7f6153e",
+			"modified": 1509368202701,
+			"created": 1509274235694,
+			"url": "https://api.thetvdb.com/login",
+			"name": "Request Token",
+			"description": "",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{ \n\t\"apikey\": \"B2FABF16E0600F2C\" \n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Content-Type",
+					"value": "application/json",
+					"id": "pair_717e2fb935b9494c870813cac27df52c"
+				},
+				{
+					"name": "Accept",
+					"value": "application/json",
+					"id": "pair_8eec73b698ca4ed58a1e02c8231ba3d0"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1509368166213.5,
+			"settingStoreCookies": true,
+			"settingSendCookies": true,
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"_type": "request"
+		},
+		{
+			"_id": "req_75d0bd63b4c44639a90a2a507ffd7016",
+			"parentId": "fld_408a617c86bb46b3ae48828cd7f6153e",
+			"modified": 1509398166240,
+			"created": 1509274803248,
+			"url": "https://api.thetvdb.com/search/series?name=thrones",
+			"name": "Search by name",
+			"description": "",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Accept",
+					"value": "application/json",
+					"id": "pair_fc0962eec5ca4d54b5f7fb6c9792e3fb"
+				},
+				{
+					"name": "Authorization",
+					"value": "Bearer {{ token }}",
+					"id": "pair_b3fd7b47d3ed44a99807834223737279"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1509368166163.5,
+			"settingStoreCookies": true,
+			"settingSendCookies": true,
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"_type": "request"
+		},
+		{
+			"_id": "req_24ffe602de4c4528bd6362d78288ce98",
+			"parentId": "fld_408a617c86bb46b3ae48828cd7f6153e",
+			"modified": 1509368361134,
+			"created": 1509276001019,
+			"url": "https://api.thetvdb.com/series/121361",
+			"name": "Show Single Series",
+			"description": "",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Accept",
+					"value": "application/json",
+					"id": "pair_fc0962eec5ca4d54b5f7fb6c9792e3fb"
+				},
+				{
+					"name": "Authorization",
+					"value": "Bearer {{ token }}",
+					"id": "pair_b3fd7b47d3ed44a99807834223737279"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1509368166113.5,
+			"settingStoreCookies": false,
+			"settingSendCookies": false,
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"_type": "request"
+		},
+		{
+			"_id": "req_893cab5bcb4d450ba54f6e2d39de864e",
+			"parentId": "fld_408a617c86bb46b3ae48828cd7f6153e",
+			"modified": 1509368358878,
+			"created": 1509368085117,
+			"url": "https://api.thetvdb.com/series/121361/images/query?keyType=poster",
+			"name": "Show Image (Poster)",
+			"description": "",
+			"method": "GET",
+			"body": {},
+			"parameters": [],
+			"headers": [
+				{
+					"name": "Accept",
+					"value": "application/json",
+					"id": "pair_fc0962eec5ca4d54b5f7fb6c9792e3fb"
+				},
+				{
+					"name": "Authorization",
+					"value": "Bearer {{ token }}",
+					"id": "pair_b3fd7b47d3ed44a99807834223737279"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1509368166063.5,
+			"settingStoreCookies": false,
+			"settingSendCookies": false,
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"_type": "request"
+		}
+	]
+}
