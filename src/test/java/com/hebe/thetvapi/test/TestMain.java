@@ -14,7 +14,8 @@ public class TestMain {
 			String token = TheTVDBApi.requestNewToken("B2FABF16E0600F2C");
 			TheTVDBApi.useToken(token);
 
-			TheTVDBApi.searchForSeries("game").forEach((e)-> System.out.println(e.getSeriesName()));
+			TheTVDBApi.searchForSeries("thrones").forEach((e)-> System.out.println(e.getSeriesName()));
+			TheTVDBApi.searchForSeries("thrones").forEach((e)-> System.out.println(e.getSeriesName()));
 			
 			System.out.println(TheTVDBApi.searchForSeriesById("121361"));
 			System.out.println(TheTVDBApi.getThumbnailPathById("121361"));

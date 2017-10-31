@@ -131,11 +131,19 @@ public abstract class TheTVDBApi {
 	 */
 	
 	public static String getThumbnailPathById(String id) throws ClientProtocolException, IOException, BadTokenException{
-		 return "https://www.thetvdb.com/banners/_cache/" + requestCoverPathById(id);
+		String subPath = requestCoverPathById(id);
+		if(subPath!=null){
+			return "https://www.thetvdb.com/banners/_cache/" + subPath;
+		}
+		return null; 
 	}
 	
 	public static String getCoverPathById(String id) throws ClientProtocolException, IOException, BadTokenException{
-		 return "https://www.thetvdb.com/banners/" + requestCoverPathById(id);
+		String subPath = requestCoverPathById(id);
+		if(subPath!=null){
+			return "https://www.thetvdb.com/banners/" + subPath;
+		}
+		return null; 
 	}
 	
 	private static String requestCoverPathById(String id) throws ClientProtocolException, IOException, BadTokenException{
@@ -151,12 +159,14 @@ public abstract class TheTVDBApi {
 	}
 	
 	private static String parseCoverPath(String json){
-		JSONArray jsonArray = new JSONObject(json).getJSONArray("data");
-		
-		if(jsonArray != null){
-			return jsonArray.getJSONObject(0).getString("fileName");
+		JSONObject jsonObject = new JSONObject(json);
+		if(jsonObject.has("data")){
+			JSONArray jsonArray = jsonObject.getJSONArray("data");
+			
+			if(jsonArray != null){
+				return jsonArray.getJSONObject(0).getString("fileName");
+			}
 		}
-		
 		return null;
 	}
 
