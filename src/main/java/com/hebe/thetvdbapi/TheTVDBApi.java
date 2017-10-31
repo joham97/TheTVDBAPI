@@ -2,6 +2,8 @@ package com.hebe.thetvdbapi;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -16,6 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.hebe.thetvdbapi.models.ApiKey;
+import com.hebe.thetvdbapi.models.Episode;
+import com.hebe.thetvdbapi.models.Season;
 import com.hebe.thetvdbapi.models.Series;
 import com.hebe.thetvdbapi.models.Token;
 
@@ -45,13 +49,19 @@ public abstract class TheTVDBApi {
 	
 	public static void useToken(String token) {
 		TheTVDBApi.token = token;
+		System.out.println("Use Token: " + token);
 	}
 
+	public static boolean badToken(String json){
+		JSONObject rootNode = new JSONObject(json);
+		return rootNode.has("Error") && rootNode.getString("Error").equals("Not authorized");
+	}
+	
 	/*
 	 * Search For Series
 	 */
 	
-	public static List<Series> searchForSeries(String keywords) throws ClientProtocolException, IOException{
+	public static List<Series> searchForSeries(String keywords) throws ClientProtocolException, IOException, BadTokenException{
 		keywords = keywords.replace(" ", "%20");
 		
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -60,7 +70,9 @@ public abstract class TheTVDBApi {
         request.addHeader("Authorization", "Bearer " + token);
         
         HttpResponse result = httpClient.execute(request);
-        return parseSeriesList(EntityUtils.toString(result.getEntity(), "UTF-8"));
+        String json = EntityUtils.toString(result.getEntity(), "UTF-8");
+        if(badToken(json)) throw new BadTokenException();
+        return parseSeriesList(json);
 	}
 	
 	private static List<Series> parseSeriesList(String json){
@@ -88,14 +100,16 @@ public abstract class TheTVDBApi {
 	 * Search For Series By ID
 	 */
 	
-	public static Series searchForSeriesById(String id) throws ClientProtocolException, IOException{
+	public static Series searchForSeriesById(String id) throws ClientProtocolException, IOException, BadTokenException{
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		HttpGet request = new HttpGet("https://api.thetvdb.com/series/"+id);
         request.addHeader("Accept", "application/json");
         request.addHeader("Authorization", "Bearer " + token);
         
         HttpResponse result = httpClient.execute(request);
-        return parseSingleSeries(EntityUtils.toString(result.getEntity(), "UTF-8"));
+        String json = EntityUtils.toString(result.getEntity(), "UTF-8");
+        if(badToken(json)) throw new BadTokenException();
+        return parseSingleSeries(json);
 	}
 	
 	private static Series parseSingleSeries(String json){
@@ -111,27 +125,29 @@ public abstract class TheTVDBApi {
 		
 		return series;
 	}
-
+	
 	/*
 	 * Cover Path
 	 */
 	
-	public static String getThumbnailPathById(String id) throws ClientProtocolException, IOException{
+	public static String getThumbnailPathById(String id) throws ClientProtocolException, IOException, BadTokenException{
 		 return "https://www.thetvdb.com/banners/_cache/" + requestCoverPathById(id);
 	}
 	
-	public static String getCoverPathById(String id) throws ClientProtocolException, IOException{
+	public static String getCoverPathById(String id) throws ClientProtocolException, IOException, BadTokenException{
 		 return "https://www.thetvdb.com/banners/" + requestCoverPathById(id);
 	}
 	
-	private static String requestCoverPathById(String id) throws ClientProtocolException, IOException{
+	private static String requestCoverPathById(String id) throws ClientProtocolException, IOException, BadTokenException{
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		HttpGet request = new HttpGet("https://api.thetvdb.com/series/"+id+"/images/query?keyType=poster");
         request.addHeader("Accept", "application/json");
         request.addHeader("Authorization", "Bearer " + token);
         
         HttpResponse result = httpClient.execute(request);
-        return parseCoverPath(EntityUtils.toString(result.getEntity(), "UTF-8"));
+        String json = EntityUtils.toString(result.getEntity(), "UTF-8");
+        if(badToken(json)) throw new BadTokenException();
+        return parseCoverPath(json);
 	}
 	
 	private static String parseCoverPath(String json){
@@ -143,5 +159,88 @@ public abstract class TheTVDBApi {
 		
 		return null;
 	}
+
+	/*
+	 * Seasons
+	 */
+	
+	public static List<Season> getSeasons(String id) throws ClientProtocolException, IOException, BadTokenException{
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet("https://api.thetvdb.com/series/" + id + "/episodes");
+        request.addHeader("Accept", "application/json");
+        request.addHeader("Authorization", "Bearer " + token);
+        
+        HttpResponse result = httpClient.execute(request);
+        String json = EntityUtils.toString(result.getEntity(), "UTF-8");
+        if(badToken(json)) throw new BadTokenException();
+        return parseSeasons(json);
+	}
+	
+	private static List<Season> parseSeasons(String json){
+		HashMap<Integer, Season> seasonsMap = new HashMap<Integer, Season>();
+		List<Season> seasons = new ArrayList<Season>();
+		
+		JSONArray jsonArray = new JSONObject(json).getJSONArray("data");
+		
+		if(jsonArray != null){
+			jsonArray.forEach((o) -> {
+				JSONObject jsonObj = ((JSONObject) o);
+				if(jsonObj.has("airedSeason") && jsonObj.has("airedEpisodeNumber") && jsonObj.has("episodeName")){
+					int airedSeason = jsonObj.getInt("airedSeason");
+					
+					if(!seasonsMap.containsKey(airedSeason)){
+						seasonsMap.put(airedSeason, new Season(airedSeason));
+						seasonsMap.get(airedSeason).setAiredSeasonID(jsonObj.getInt("airedSeasonID"));
+					}
+					
+					Episode episode = new Episode();
+					episode.setAiredEpisodeNumber(jsonObj.getInt("airedEpisodeNumber"));
+					episode.setEpisodeName(jsonObj.getString("episodeName"));
+					episode.setId(jsonObj.getInt("id"));
+					seasonsMap.get(airedSeason).addEpisodes(episode);
+				}
+			});
+		}
+		
+		seasonsMap.values().forEach((s) -> seasons.add(s));
+		seasons.sort(Comparator.comparingInt(Season::getAiredSeason));
+		
+		return seasons;
+	}
+
+	/*
+	 * Episode Image By ID
+	 */
+
+	public static String getEpisodeThumbnailPathById(String id) throws ClientProtocolException, IOException, BadTokenException{
+		 return "https://www.thetvdb.com/banners/_cache/" + getEpisodeImage(id);
+	}
+	
+	public static String getEpisodeCoverPathById(String id) throws ClientProtocolException, IOException, BadTokenException{
+		 return "https://www.thetvdb.com/banners/" + getEpisodeImage(id);
+	}
+	
+	private static String getEpisodeImage(String id) throws ClientProtocolException, IOException, BadTokenException{
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet("https://api.thetvdb.com/episodes/"+id);
+        request.addHeader("Accept", "application/json");
+        request.addHeader("Authorization", "Bearer " + token);
+        
+        HttpResponse result = httpClient.execute(request);
+        String json = EntityUtils.toString(result.getEntity(), "UTF-8");
+        if(badToken(json)) throw new BadTokenException();
+        return parseEpisodeImage(json);
+	}
+	
+	private static String parseEpisodeImage(String json){
+		JSONObject jsonObject = new JSONObject(json).getJSONObject("data");
+		
+		if(!jsonObject.isNull("filename")) {
+			return jsonObject.getString("filename");
+		}
+		
+		return null;
+	}
+
 	
 }
